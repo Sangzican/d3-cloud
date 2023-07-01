@@ -1,0 +1,134 @@
+<html>
+  <head>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="d3-cloud-master/build/d3.layout.cloud.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+
+  <body>
+    <script>
+      var words = [{'text': '少年陈真之乱世英雄', 'size': 50.0},
+ {'text': '消失的她', 'size': 49.30555555555555},
+ {'text': '男狐聊斋3', 'size': 47.916666666666664},
+ {'text': '昆仑劫之鲛人泪', 'size': 44.44444444444444},
+ {'text': '大清十二刑', 'size': 42.36111111111111},
+ {'text': '问天录之少年钟馗', 'size': 42.36111111111111},
+ {'text': '刺客信条', 'size': 40.97222222222222},
+ {'text': '倒数说爱你', 'size': 38.88888888888888},
+ {'text': '钟馗降魔', 'size': 38.194444444444436},
+ {'text': '极地密码', 'size': 37.49999999999999},
+ {'text': '叫我郑先生', 'size': 34.02777777777777},
+ {'text': '枕刀歌之尘世行', 'size': 34.02777777777777},
+ {'text': '异兽之捕龙令', 'size': 32.63888888888888},
+ {'text': '目中无人2022', 'size': 32.63888888888888},
+ {'text': '白塔之光', 'size': 31.944444444444436},
+ {'text': '绿夜', 'size': 31.944444444444436},
+ {'text': '我心飞扬', 'size': 31.944444444444436},
+ {'text': '深海危机', 'size': 31.249999999999993},
+ {'text': '狙击之王:暗杀', 'size': 31.249999999999993},
+ {'text': '大蛇王', 'size': 31.249999999999993},
+ {'text': '特级英雄黄继光', 'size': 30.555555555555554},
+ {'text': '深海巨蟒', 'size': 30.555555555555554},
+ {'text': '刿心剑', 'size': 29.86111111111111},
+ {'text': '深海蛇难2022', 'size': 29.86111111111111},
+ {'text': '蛇灾：蛇岛惊魂', 'size': 29.86111111111111},
+ {'text': '黄金蜘蛛城', 'size': 29.86111111111111},
+ {'text': '狄仁杰之九层妖楼', 'size': 29.86111111111111},
+ {'text': '桃花缘起', 'size': 29.86111111111111},
+ {'text': '人生路不熟', 'size': 29.166666666666657},
+ {'text': '雪云', 'size': 29.166666666666657},
+ {'text': '燃冬', 'size': 28.472222222222214},
+ {'text': '艺术学院', 'size': 28.472222222222214},
+ {'text': '张三丰', 'size': 28.472222222222214},
+ {'text': '孔秀', 'size': 28.472222222222214},
+ {'text': '纸人回魂', 'size': 27.777777777777768},
+ {'text': '七剑', 'size': 27.777777777777768},
+ {'text': '战地：异种浩劫', 'size': 27.777777777777768},
+ {'text': '山海经:再见高手', 'size': 27.083333333333332},
+ {'text': '变种人:幽灵战姬', 'size': 27.083333333333332},
+ {'text': '阖家辣', 'size': 26.38888888888889},
+ {'text': '盲战', 'size': 25.694444444444436},
+ {'text': '千里不留行', 'size': 25.694444444444436},
+ {'text': '小白船', 'size': 25.694444444444436},
+ {'text': '九龍東往事', 'size': 25.694444444444436},
+ {'text': '断·桥', 'size': 22.916666666666664},
+ {'text': '大幻术师2', 'size': 22.916666666666664},
+ {'text': '交换人生', 'size': 18.749999999999993},
+ {'text': '鬼吹灯龙陵神秘石窟', 'size': 18.749999999999993},
+ {'text': '您好，北京', 'size': 15.972222222222221},
+ {'text': '致命寄生虫', 'size': 0.0}];
+
+
+      // 获取容器元素
+      var container = d3.select("#wordcloud");
+
+      // 创建词云布局
+      var layout = d3.layout
+        .cloud()
+        .size([1200, 600])
+        .words(words)
+        .padding(5)
+        .rotate(function () {
+          // return ~~(Math.random() * 2) * 90;
+          // return (~~(Math.random() * 6) - 3) * 20;
+          return 0;
+        })
+        .font("Impact")
+        .fontSize(function (d) {
+          return d.size;
+        })
+        .on("end", draw);
+
+      // 设置每个单词的颜色
+      layout.words().forEach(function (word) {
+        word.color = getRandomColor();
+      });
+
+      // 绘制词云
+      layout.start();
+
+      //绘制函数
+      function draw(words) {
+        d3.select("body")
+          .append("svg")
+          .attr("width", layout.size()[0])
+          .attr("height", layout.size()[1])
+          .attr("style", "background-color:#fdeef5")
+          .append("g")
+          .attr(
+            "transform",
+            "translate(" +
+              layout.size()[0] / 2 +
+              "," +
+              layout.size()[1] / 2 +
+              ")"
+          )
+          .selectAll("text")
+          .data(words)
+          .enter()
+          .append("text")
+          .style("font-size", function (d) {
+            return d.size + "px";
+          })
+          .style("font-family", "Impact")
+          .style("fill", function (d) {
+            return d.color;
+          }) // 设置每个单词的颜色
+          .attr("text-anchor", "middle")
+          .attr("transform", function (d) {
+            return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+          })
+          .text(function (d) {
+            return d.text;
+          });
+      }
+
+      // 生成随机颜色
+      function getRandomColor() {
+        colors = ["#9a9957","#b2c2b5","#dacba0","#e4d8d3"]
+        i = Math.floor(Math.random() * (4 - 1 + 1)) + 1 - 1;
+        return colors[i];
+      }
+    </script>
+  </body>
+</html>
